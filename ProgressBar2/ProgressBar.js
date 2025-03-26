@@ -1,28 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 function ProgressBar() {
-  const [progress, setProgress] = useState(0); // To track the progress (0 to 100)
-  const [isActive, setIsActive] = useState(false); // To track whether the progress is active
-  const [intervalId, setIntervalId] = useState(null); // To store the interval ID for clearing
+  const [progress, setProgress] = useState(0);
+  const [isActive, setIsActive] = useState(false);
+  const [intervalId, setIntervalId] = useState(null);
 
   // Start/Restart function
   const handleStart = () => {
-    if (isActive) {
-      // If progress is active, reset the progress to 0
-      setProgress(0);
-    }
+    if (isActive) setProgress(0);
     setIsActive(true);
     const id = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
-          clearInterval(id); // Stop the progress at 100%
+          clearInterval(id);
           setIsActive(false);
           return 100;
         }
         return prev + 1;
       });
-    }, 100); // Update the progress every 100ms
-    setIntervalId(id); // Store the interval ID for clearing later
+    }, 100);
+    setIntervalId(id);
   };
 
   // Pause function
@@ -38,49 +35,107 @@ function ProgressBar() {
     setIsActive(false);
   };
 
-  // Handle restart functionality
-  const handleRestart = () => {
-    setProgress(0);
-    setIsActive(false);
-    handleStart();
-  };
-
   return (
-    <div style={{ padding: "20px", textAlign: "center" }}>
-      <div>
+    <div
+      style={{
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#1e1e2f",
+      }}
+    >
+      <div
+        style={{
+          width: "400px",
+          background: "#2a2a3a",
+          padding: "20px",
+          borderRadius: "12px",
+          textAlign: "center",
+          boxShadow: "0px 4px 10px rgba(0,0,0,0.3)",
+        }}
+      >
         {/* Progress bar */}
         <div
           style={{
             width: "100%",
-            backgroundColor: "#e0e0df",
+            backgroundColor: "#3a3a4a",
             borderRadius: "10px",
             height: "30px",
             marginBottom: "10px",
+            overflow: "hidden",
+            boxShadow: "inset 0 0 5px rgba(255,255,255,0.2)",
           }}
         >
           <div
             style={{
               width: `${progress}%`,
-              backgroundColor: "#4caf50",
+              background: "linear-gradient(90deg, #6a11cb, #2575fc)",
               height: "100%",
               borderRadius: "10px",
+              transition: "width 0.1s ease-in-out",
             }}
           ></div>
         </div>
-        <div>{progress}%</div>
-      </div>
 
-      {/* Controls */}
-      <div>
-        <button onClick={handleStart} disabled={isActive}>
-          Start/Restart
-        </button>
-        <button onClick={handlePause} disabled={!isActive}>
-          Pause
-        </button>
-        <button onClick={handleStop} disabled={progress === 0}>
-          Stop
-        </button>
+        <div style={{ fontSize: "18px", fontWeight: "bold", color: "#fff" }}>
+          {progress}%
+        </div>
+
+        {/* Controls */}
+        <div style={{ marginTop: "15px" }}>
+          <button
+            onClick={handleStart}
+            disabled={isActive}
+            style={{
+              padding: "10px 20px",
+              margin: "5px",
+              borderRadius: "5px",
+              border: "none",
+              backgroundColor: isActive ? "#666" : "#4caf50",
+              color: "white",
+              cursor: isActive ? "not-allowed" : "pointer",
+              fontWeight: "bold",
+              transition: "0.3s",
+            }}
+          >
+            Start/Restart
+          </button>
+          <button
+            onClick={handlePause}
+            disabled={!isActive}
+            style={{
+              padding: "10px 20px",
+              margin: "5px",
+              borderRadius: "5px",
+              border: "none",
+              backgroundColor: !isActive ? "#666" : "#ff9800",
+              color: "white",
+              cursor: !isActive ? "not-allowed" : "pointer",
+              fontWeight: "bold",
+              transition: "0.3s",
+            }}
+          >
+            Pause
+          </button>
+          <button
+            onClick={handleStop}
+            disabled={progress === 0}
+            style={{
+              padding: "10px 20px",
+              margin: "5px",
+              borderRadius: "5px",
+              border: "none",
+              backgroundColor: progress === 0 ? "#666" : "#f44336",
+              color: "white",
+              cursor: progress === 0 ? "not-allowed" : "pointer",
+              fontWeight: "bold",
+              transition: "0.3s",
+            }}
+          >
+            Stop
+          </button>
+        </div>
       </div>
     </div>
   );
